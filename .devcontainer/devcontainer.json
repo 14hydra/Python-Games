@@ -48,8 +48,7 @@
 	"customizations": {
 	    "codespaces": {
 	      "openFiles": [
-			//"lessons/00_Turtles/01_Get_Started.ipynb"
-			"README.md"
+			"/workspaces/Python-Games/lessons/00_Getting_Started/GettingStarted.ipynb"
 		  ]
 	    },
 	    "vscode": {
@@ -60,7 +59,8 @@
 			"ms-toolsai.jupyter"
 	      ], 
 		  "settings": {
-
+			"python.defaultInterpreterPath": "/usr/local/bin/python",
+			"python.terminal.activateEnvironment": false
 		  }
 	    }
   	}
