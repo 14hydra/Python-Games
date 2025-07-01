@@ -38,6 +38,8 @@ class GameSettings:
 # Initialize game settings
 settings = GameSettings()
 
+d_v_y = 0
+
 
 # Initialize screen
 screen = pygame.display.set_mode((settings.screen_width, settings.screen_height))
@@ -61,14 +63,25 @@ while running:
             running = False
 
     # Continuously jump. If the player is not jumping, initialize a new jump
-    if is_jumping is False:
+    #if is_jumping is False and key[pygame.k_space]:
         # Jumping means that the player is going up. The top of the 
         # screen is y=0, and the bottom is y=SCREEN_HEIGHT. So, to go up,
         # we need to have a negative y velocity
+        # d_v_y = -settings.jump_velocity
+        # is_jumping = True
+
+    # acelleration in sht y direction
+
+    key = pygame.key.get_pressed()
+
+
+
+    if (key[pygame.K_SPACE] and is_jumping is False):
         d_v_y = -settings.jump_velocity
         is_jumping = True
 
-    # acelleration in sht y direction
+
+
     a_y = settings.gravity
 
     # Change in the velocity due to accelleration

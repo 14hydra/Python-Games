@@ -55,11 +55,20 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
+    keys = pygame.key.get_pressed()
+
+    if keys[pygame.K_a]:
+        x_direction = (-1) * abs(x_direction)
+    elif keys[pygame.K_d]:
+        x_direction = abs(x_direction)
+
     # Continuously jump. If the square is not jumping, make it jump
-    if is_jumping is False:
+    if keys[pygame.K_SPACE] and is_jumping is False:
         # Jumping means that the square is going up. The top of the 
         # screen is y=0, and the bottom is y=screen_height. So, to go up,
         # we need to have a negative y velocity
+
+
         
         velocity_y = -settings.jump_velocity_y
         velocity_x = settings.jump_velocity_x * x_direction
@@ -97,9 +106,14 @@ while running:
     # If the square hits the ground, stop the square from falling.
     if y_pos + settings.square_size > settings.screen_height:
         y_pos = settings.screen_height - settings.square_size
-        velocity_y = 0
-        velocity_x = 0
+        velocity_y = -velocity_y * 2/3
+        velocity_x = velocity_x * 2/3
+
+
+    if velocity_y == 0:
         is_jumping = False
+
+
 
     # Fill the screen with background color (clears previous frame)
     screen.fill(settings.background_color)
