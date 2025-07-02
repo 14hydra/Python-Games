@@ -68,7 +68,40 @@ class Turtle:
         # Turn left by adjusting the angle counterclockwise
         self.angle = (self.angle + angle) % 360
 
+class Turtle2(Turtle):
+    def __init__(self, screen, x: int, y: int, color: str):
+        super().__init__(screen, x, y)
+        self.color = color
+        pygame.color = self.color
+        self.pen = True
 
+    def forward(self, distance):
+        if (self.pen):
+            super().forward(distance)
+
+        radian_angle = math.radians(self.angle)
+
+        dx = math.cos(radian_angle) * distance
+        dy = math.sin(radian_angle) * distance
+
+        self.x += dx
+        self.y -= dy
+
+
+
+
+    def right(self, angle):
+
+        super().left(360 - angle)
+
+    def pen_up(self):
+        self.pen = False
+
+    def pen_down(self):
+        self.pen = True
+
+def xy(turtle):
+    print(f"x: {turtle.x}, y: {turtle.y}")
 # Main loop
 
 # Initialize Pygame
@@ -90,6 +123,23 @@ turtle = Turtle(screen, screen.get_width() // 2, screen.get_height() // 2)  # St
 for _ in range(4):
     turtle.forward(100)  # Move forward by 100 pixels
     turtle.left(90)  # Turn left by 90 degrees
+
+xy(turtle)
+turtle2 = Turtle2(screen, 250, 400, "green")
+xy(turtle2)
+
+turtle.forward(100)
+turtle.left(90)
+turtle.forward(100)
+
+turtle2.pen_up()
+turtle2.forward(100)
+turtle2.right(90)
+turtle2.pen_down()
+turtle2.forward(100)
+
+xy(turtle)
+xy(turtle2)
 
 # Display the drawing
 pygame.display.flip()
