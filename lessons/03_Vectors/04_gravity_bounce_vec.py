@@ -92,6 +92,8 @@ class Player:
         # Player's velocity
         self.vel = pygame.Vector2(settings.player_v_x, settings.player_v_y)  # Velocity vector
 
+        self.drag = -self.vel * 0.01
+
 
 
     # Direction functions. IMPORTANT! Using these functions isn't really
@@ -141,6 +143,7 @@ class Player:
         self.update_jump()
         self.update_v()
         self.update_pos()
+
         
     def update_v(self):
         """Update the player's velocity based on gravity and bounce on edges"""
@@ -160,6 +163,16 @@ class Player:
         
         if (self.at_left() and self.going_left() ) or ( self.at_right() and self.going_right()):
             self.vel.x = -self.vel.x
+
+        self.drag = -self.vel * 0.01
+        self.vel += self.drag
+
+        if (abs(self.vel.y) < 0.01):
+            self.vel.y = 0
+        if (abs(self.vel.x) < 0.01):
+            self.vel.x = 0
+
+
             
     def update_pos(self):
         """Update the player's position based on velocity"""
@@ -189,6 +202,11 @@ class Player:
         # check if the player is at the bottom. 
         if self.at_bottom():
             self.vel += self.v_jump
+
+
+
+
+
          
 
     def draw(self, screen):

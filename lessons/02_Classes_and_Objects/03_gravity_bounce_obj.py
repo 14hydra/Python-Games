@@ -87,9 +87,9 @@ class Game:
 class Player:
     """Player class, just a bouncing rectangle"""
 
-    def __init__(self, game: Game):
+    def __init__(self, game: Game, x_vel: int, y_vel: int, x_loc: int, y_loc, color: Colors):
         self.game = game
-        settings = game.settings
+
 
         self.width = settings.player_width
         self.height = settings.player_height
@@ -97,11 +97,13 @@ class Player:
         self.is_jumping = False
         self.v_jump = settings.player_jump_velocity
 
-        self.y = settings.player_start_y if settings.player_start_y is not None else settings.height - self.height
-        self.x = settings.player_start_x
+        self.y = y_loc
+        self.x = x_loc
         
-        self.v_x = settings.player_v_x  # X Velocity
-        self.v_y = settings.player_v_y  # Y Velocity
+        self.v_x = x_vel  # X Velocity
+        self.v_y = y_vel  # Y Velocity
+
+        self.color = color
 
     def update(self):
         """Update player position, continuously jumping"""
@@ -138,14 +140,16 @@ class Player:
             self.is_jumping = True
 
     def draw(self, screen):
-        pygame.draw.rect(screen, Colors.BLACK, (self.x, self.y, self.width, self.height))
+        pygame.draw.rect(screen, self.color, (self.x, self.y, self.width, self.height))
 
 
 settings = GameSettings()
 game = Game(settings)
 
-p1 = Player(game)
+p1 = Player(game, 30, 50, 400, 500, Colors.RED)
+p2 = Player(game, 20, 60, 100, 300, Colors.BLACK)
 game.add_player(p1)
+game.add_player(p2)
 
 
 game.run()
