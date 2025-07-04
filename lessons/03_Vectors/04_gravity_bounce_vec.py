@@ -8,6 +8,7 @@ understandable, and makes it easier to add more complex features to the game.
 
 """
 import pygame
+import math
 from dataclasses import dataclass
 
 
@@ -66,10 +67,19 @@ class Game:
 
             self.screen.fill(Colors.BACKGROUND_COLOR)
             player.draw(self.screen)
+            self.draw()
             pygame.display.flip()
             self.clock.tick(self.settings.frame_rate)
 
+
+
         pygame.quit()
+
+    def vect_to_center(self, position: pygame.Vector2):
+        return pygame.Vector2(250, 250) - position
+
+    def draw(self):
+        pygame.draw.circle(self.screen, Colors.BLACK, (250, 250), 10)
 
 
 class Player:
@@ -93,6 +103,11 @@ class Player:
         self.vel = pygame.Vector2(settings.player_v_x, settings.player_v_y)  # Velocity vector
 
         self.drag = -self.vel * 0.01
+
+        self.scalar = 10
+        #  self.angle = 90
+        self.thrust = pygame.Vector2(0, -10)
+        self.position = self.thrust / self.scalar
 
 
 
@@ -143,12 +158,13 @@ class Player:
         self.update_jump()
         self.update_v()
         self.update_pos()
+        self.update_input()
 
         
     def update_v(self):
         """Update the player's velocity based on gravity and bounce on edges"""
          
-        self.vel += self.game.gravity  # Add gravity to the velocity
+        self.vel += self.gravity()  # Add gravity to the velocity
 
         if self.at_bottom() and self.going_down():
             self.vel.y = 0
@@ -200,17 +216,59 @@ class Player:
         
         # Notice that we've gotten rid of self.is_jumping, because we can just
         # check if the player is at the bottom. 
-        if self.at_bottom():
-            self.vel += self.v_jump
+        # if self.at_bottom():
+            # self.vel += self.v_jump
 
 
 
+    def update_input(self):
+        if pygame.key.get_pressed()[pygame.K_SPACE]:
+            self.vel += self.thrust
 
+        if pygame.key.get_pressed()[pygame.K_RIGHT]:
+            self.thrust.rotate_ip(1)
+            self.position.rotate_ip(1)
+
+        if pygame.key.get_pressed()[pygame.K_LEFT]:
+            self.thrust.rotate_ip(-1)
+            print(self.thrust)
+            self.position.rotate_ip(-1)
+
+        if pygame.key.get_pressed()[pygame.K_UP]:
+            self.scalar += 1
+            self.thrust = self.position * (self.scalar)
+
+        if pygame.key.get_pressed()[pygame.K_DOWN]:
+            self.scalar -= 1
+            self.thrust = self.position * (self.scalar)
 
          
 
     def draw(self, screen):
+
+
         pygame.draw.rect(screen, Colors.PLAYER_COLOR, (self.pos.x, self.pos.y, self.width, self.height))
+
+        actual_pos = pygame.Vector2(self.pos.x + 10, self.pos.y + 10)
+        pygame.draw.line(screen, Colors.PLAYER_COLOR, actual_pos, actual_pos + 4 * self.thrust, 2)
+
+
+    def gravity(self):
+
+
+        out2 = game.vect_to_center(self.position)
+        r = out2.length()
+        if r == 0:
+
+            out2 *= 0
+        else:
+
+            out2 *= 1 / (r ** 2)
+
+
+        out2 *= 100
+        print(out2)
+        return out2
 
 
 settings = GameSettings()
